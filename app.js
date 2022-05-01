@@ -22,6 +22,9 @@ function weatherJsonToObject(json) {
   temp_max = json.main.temp_max;
   temp_min = json.main.temp_min;
   description = json.weather[0].description;
+  wind = json.wind.speed;
+  humidity = json.main.humidity;
+  pressure = json.main.pressure;
   return {
     city,
     country,
@@ -29,34 +32,58 @@ function weatherJsonToObject(json) {
     temp_max,
     temp_min,
     description,
+    wind,
+    humidity,
+    pressure,
   };
 }
 
 function displayWeather(weatherObj) {
   const weatherDiv = document.querySelector(".weather");
-  weatherDiv.textContent = "";
 
-  const city = document.createElement("div");
+  const city = document.querySelector(".city");
   city.textContent = `${weatherObj.city}, ${weatherObj.country}`;
 
-  const temp = document.createElement("div");
+  const temp = document.querySelector(".temp");
   temp.textContent = weatherObj.temp;
 
-  const temp_max = document.createElement("div");
-  temp_max.textContent = weatherObj.temp_max;
+  const minMax = document.querySelector(".min-max");
+  minMax.textContent = `Min ${weatherObj.temp_max} - Max ${weatherObj.temp_min}`;
 
-  const temp_min = document.createElement("div");
-  temp_min.textContent = weatherObj.temp_min;
-
-  const description = document.createElement("div");
+  const description = document.querySelector(".description");
   description.textContent = weatherObj.description;
 
-  weatherDiv.append(city, temp, temp_max, temp_min, description);
+  const humidity = document.querySelector(".humidity");
+  humidity.textContent = weatherObj.humidity + "%";
+
+  const wind = document.querySelector(".wind");
+  wind.textContent = weatherObj.wind + "m/s";
+
+  const pressure = document.querySelector(".pressure");
+  pressure.textContent = weatherObj.pressure + "mb";
 }
 
-async function searchCityWeather(e) {
-  const cityToSearch = document.querySelector("input").value;
+function showLoadingComponent() {
+  const loading = document.querySelector(".loading");
+
+  loading.style.display = "flex";
+}
+
+function hideLoadingComponent() {
+  const loading = document.querySelector(".loading");
+  loading.style.display = "none";
+}
+
+async function searchCityWeather() {
+  let cityToSearch = document.querySelector("input").value;
+  if (cityToSearch === "") {
+    cityToSearch = "vancouver";
+  }
+  showLoadingComponent();
   const weatherJson = await fetchWeather(cityToSearch);
   const weatherObj = weatherJsonToObject(weatherJson);
   displayWeather(weatherObj);
+  hideLoadingComponent();
 }
+
+searchCityWeather();
