@@ -1,0 +1,13 @@
+body {
+    background-color: rgb(17, 19, 22);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.weather {
+    height: 60%;
+    background-repeat: no-repeat;
+    background-size: 10px;
+}
